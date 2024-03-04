@@ -10,20 +10,23 @@ $\ddot{x} + 2d\omega_0\dot{x} + \omega_0^2 x = 0$
 где
 $d = \frac{c}{2 \sqrt{km}}, \omega_0 = \sqrt{\frac{k}{m}}$
 
-Это же можно выразить через простой человеческий вектор $z =
+Это же можно выразить через простой человеческий вектор 
+```math
+z =
     \begin{bmatrix}
         x \\
-        \dot{x} \\
+        \dot{x} 
     \end{bmatrix}$
-
+```
 Тогда и наше выражение примет форму:
-$\dot{z} =
+```math
+\dot{z} =
     \begin{bmatrix}
         0 & 1 \\
-        -\omega_0^2 & -2d\omega_0 \\
+        -\omega_0^2 & -2d\omega_0 
     \end{bmatrix}
-    \cdot z = A \cdot z$
-
+    \cdot z = A \cdot z 
+```
 Что с этим делать дальше каждый решает сам. Мы, например, построим явного и неявного (обратного) Эйлера:
 $z_{k+1} = (I + A\cdot\Delta t)\cdot z_k = F\cdot z_k$
 и
