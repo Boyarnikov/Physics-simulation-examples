@@ -1,30 +1,30 @@
 # Симуляция тканей при помощи метода Верле
 Вспомним метод Полу-Эйлера
 ```math
-$v_{i+1}  = v_{i} + {F/m} \cdot Δt$
+v_{i+1}  = v_{i} + {F/m} \cdot Δt
 ```
 ```math
-$x_{i+1}  = x_{i} + v_{i+1} \cdot Δt$
+x_{i+1}  = x_{i} + v_{i+1} \cdot Δt
 ```
 Можем заметить что в действительности мы можем обойтись без $v_i$ если у нас сохранён $x_{i-1}$
 ```math
-$x_{i}  = x_{i-1} + v_{i} \cdot Δt$
+x_{i}  = x_{i-1} + v_{i} \cdot Δt
 ```
 ```math
-$v_{i}  = (x_{i} - x_{i-1}) / Δt$
+v_{i}  = (x_{i} - x_{i-1}) / Δt
 ```
 Воспользовавшись этим можем получить метод Верле 
 ```math
-$x_{i+1}  = x_{i} + v_{i+1} \cdot Δt$
+x_{i+1}  = x_{i} + v_{i+1} \cdot Δt
 ```
 ```math
-$x_{i+1}  = x_{i} + (v_{i} + {F/m} * Δt) \cdot Δt$
+x_{i+1}  = x_{i} + (v_{i} + {F/m} * Δt) \cdot Δt
 ```
 ```math
-$x_{i+1}  = x_{i} + ((x_{i} - x_{i-1}) / Δt + {F/m} \cdot Δt) \cdot Δt$
+x_{i+1}  = x_{i} + ((x_{i} - x_{i-1}) / Δt + {F/m} \cdot Δt) \cdot Δt
 ```
 ```math
-$x_{i+1}  = 2x_{i} - x_{i-1} + {F/m} \cdot Δt^2$
+x_{i+1}  = 2x_{i} - x_{i-1} + {F/m} \cdot Δt^2
 ```
 Или, в случае демпинга
 ```math
@@ -36,27 +36,27 @@ $x_{i+1}  = 2x_{i} - x_{i-1} + {F/m} \cdot Δt^2$
     \cdot z = A \cdot z
 ```
 ```math
-$z_{k+1} = (I + A\cdot\Delta t)\cdot z_k = F\cdot z_k$
+z_{k+1} = (I + A\cdot\Delta t)\cdot z_k = F\cdot z_k
 ```
 ```math
-$x_{i+1}  = 2x_{i} - x_{i-1} + (- w^2 x_i - dw(x_i-x_{i-1} ))Δt^2$
+x_{i+1}  = 2x_{i} - x_{i-1} + (- w^2 x_i - dw(x_i-x_{i-1} ))Δt^2
 ```
 Для
 ```math
-$d = \frac{c}{2 \sqrt{km}},   \omega_0 = \sqrt{\frac{k}{m}}$
+d = \frac{c}{2 \sqrt{km}},   \omega_0 = \sqrt{\frac{k}{m}}
 ```
 Тогда, просуммировав по всем пружинам силы $F = -kΔx$  и собрав их в ускорение $a = F/m$ получим
 ```math
-$x_{i+1}  = 2x_{i} - x_{i-1} + (-k/m \cdot x_i -c/2m\cdot (x_i-x_{i-1} ))Δt^2$
+x_{i+1}  = 2x_{i} - x_{i-1} + (-k/m \cdot x_i -c/2m\cdot (x_i-x_{i-1} ))Δt^2
 ```
 ```math
-$x_{i+1}  = 2x_{i} - x_{i-1} + aΔt^2 - (c/2m\cdot (x_i-x_{i-1} ))Δt^2$
+x_{i+1}  = 2x_{i} - x_{i-1} + aΔt^2 - (c/2m\cdot (x_i-x_{i-1} ))Δt^2
 ```
 ```math
-$x_{i+1}  = 2x_{i} - x_{i-1} + aΔt^2 - (c/2m\cdot (x_i-x_{i-1} ))Δt^2$
+x_{i+1}  = 2x_{i} - x_{i-1} + aΔt^2 - (c/2m\cdot (x_i-x_{i-1} ))Δt^2
 ```
 ```math
-$x_{i+1}  = x_{i} +  (x_{i} - x_{i-1})(1 - c/2mΔt^2) + aΔt^2$
+x_{i+1}  = x_{i} +  (x_{i} - x_{i-1})(1 - c/2mΔt^2) + aΔt^2
 ```
 
 # Ткань
