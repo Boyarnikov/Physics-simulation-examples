@@ -23,7 +23,7 @@ points, connections = create_rect_x(h, w,
                                     h_vec=np.array([0.8, 0.0, 0.0]),
                                     w_vec=np.array([0.0, 0.8, 0.0]))
 
-sb = SoftBody(_points=points, _connections=connections, iters=3, m=0.5, c=60)
+sb = SoftBody(_points=points, _connections=connections, iters=3, m=0.1, c=60)
 sb.fix_points([0])
 sb.fix_points([h - 1])
 
