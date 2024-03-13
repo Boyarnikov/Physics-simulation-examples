@@ -28,7 +28,7 @@ class SoftBody:
                  _points,
                  _connections=None,
                  m=1.,
-                 c=30,
+                 c=0.,
                  iters: int = 1):
         self.point_amount = len(_points)
         self.point_position = np.asarray(_points, dtype=np.float64)
@@ -95,6 +95,9 @@ class SoftBody:
         acc = self.point_force / self.point_mass
 
         self.point_velocity += acc * dt
+
+        self.point_velocity *= 1-self.C
+
         self.point_next_position = self.point_position + self.point_velocity * dt * self.point_is_free[..., None]
 
         self._solve_constrains()
