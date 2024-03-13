@@ -19,7 +19,9 @@ class AnimateSoftBody:
 
     dt = 1 / 60
 
-    def __init__(self, soft_body: SoftBody, dt, draw_connections=True):
+    frames = -1
+
+    def __init__(self, soft_body: SoftBody, dt, draw_connections=True, frames=-1):
         self.dt = dt
         self.time = 0
         self.fig = plt.figure()
@@ -27,6 +29,8 @@ class AnimateSoftBody:
         self.ax.set(xlim3d=(0, 1), xlabel='X')
         self.ax.set(ylim3d=(0, 1), ylabel='Y')
         self.ax.set(zlim3d=(0, 1), zlabel='Z')
+
+        self.frames = frames
 
         self.soft_body = soft_body
         self.draw_connections = draw_connections
@@ -37,13 +41,16 @@ class AnimateSoftBody:
             self._draw_connections()
 
         def animate(frame, animator: AnimateSoftBody):
+            if self.frames != -1 and frame < self.frames:
+                if (frame // (self.frames // 10)) < (frame + 1) // (self.frames // 10):
+                    print(f"{(frame + 1) // (self.frames // 10) * 10}%")
+
             animator._simulate_soft_body()
             animator._draw_points()
             if animator.draw_connections:
                 animator._draw_connections()
 
             return self.actor_points, self.actor_connections
-
 
         self.animation_func = animate
 
