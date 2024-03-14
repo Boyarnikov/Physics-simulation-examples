@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Constrain:
-    def iterate_constrain(self, point_position: np.array, point_old_position: np.array):
+    def iterate_constrain(self, point_position: np.array, point_velocity: np.array):
         pass
 
 
@@ -23,10 +23,11 @@ class PlaneConstrain(Constrain):
         n_hat = np.cross(self.v1, self.v2)
         self.n_hat = n_hat / np.sqrt(np.dot(n_hat, n_hat))
 
-    def iterate_constrain(self, point_position: np.array, point_old_position: np.array):
+    def iterate_constrain(self, point_position: np.array, point_velocity: np.array):
 
         result = np.zeros(point_position.shape[0])
         for idx in range(point_position.shape[0]):
             result[idx] = np.dot(self.n_hat, point_position[idx, :] - self.v_start)
             if result[idx] < 0:
                 point_position[idx, :] -= self.n_hat * result[idx]
+                point_velocity[idx, :] -= 2 * np.dot(point_velocity[idx, :], self.n_hat)
