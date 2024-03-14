@@ -7,7 +7,7 @@ import time
 from SoftBody import SoftBody
 from AnimateSoftBody import AnimateSoftBody
 from ClothShapes import create_rect_x
-from BodyShapes import create_cube
+from BodyShapes import create_cube_rigid
 from Constrain import PlaneConstrain
 
 # from matplotlib import rc
@@ -30,16 +30,18 @@ sb.fix_points([0])
 sb.fix_points([h - 1])
 '''
 
-h, w, d = 3, 3, 3
-points, connections = create_cube(h, w, d,
+h, w, d = 2, 2, 2
+points, connections = create_cube_rigid(h, w, d,
                                     starting_point=np.array([0.2, 0.2, 0.2]),
-                                    h_vec=np.array([0.6, 0.0, 0.1]),
-                                    w_vec=np.array([0.0, 0.6, 0.1]),
-                                    d_vec=np.array([0.0, 0.0, 0.6]))
+                                    h_vec=np.array([0.3, 0.0, 0.0]),
+                                    w_vec=np.array([0.0, 0.3, 0.0]),
+                                    d_vec=np.array([0.0, 0.0, 0.3]))
 
 i = 1
-c = 0.1
-sb = SoftBody(_points=points, _connections=connections, iters=i, m=0.1, c=c)
+c = 0.04
+sb = SoftBody(_points=points, _connections=connections, iters=i, m=0.01, c=c)
+
+sb.point_velocity[0] = np.array([80, 30, 50])
 
 floor = PlaneConstrain(np.zeros(3), np.array([1.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0]))
 sb.add_constrain(floor)
@@ -47,8 +49,12 @@ wall = PlaneConstrain(np.zeros(3), np.array([0.0, 1.0, 0.0]), np.array([0.0, 0.0
 sb.add_constrain(wall)
 wall = PlaneConstrain(np.zeros(3), np.array([0.0, 0.0, 1.0]), np.array([1.0, 0.0, 0.0]))
 sb.add_constrain(wall)
+wall = PlaneConstrain(np.array([0.0, 1.0, 0.0]), np.array([1.0, 0.0, 0.0]), np.array([0.0, 0.0, 1.0]))
+sb.add_constrain(wall)
+wall = PlaneConstrain(np.array([1.0, 0.0, 0.0]), np.array([0.0, 0.0, 1.0]), np.array([0.0, 1.0, 0.0]))
+sb.add_constrain(wall)
 
-frames = 600
+frames = 200
 asb = AnimateSoftBody(soft_body=sb, dt=DT, frames=frames)
 
 
@@ -57,6 +63,6 @@ ani = animation.FuncAnimation(
     interval=10)
 
 writer = animation.PillowWriter(fps=30, bitrate=1800)
-ani.save(f'bin/Cube_skewed_{i}iters_{frames}frames_{c}dump.gif', writer=writer)
+ani.save(f'bin/Cube_with_physics.gif', writer=writer)
 
 plt.show()
