@@ -70,10 +70,11 @@ class SoftBody:
         self.constrains.append(constrain)
 
     def _solve_constrains(self):
+        self.last_collision_norm = np.zeros((self.point_amount, 3))
         for _ in range(self.iteration_count):
             self._iterate_constrains_connections()
             for c in self.constrains:
-                c.iterate_constrain(self.point_next_position, self.point_next_position)
+                c.iterate_constrain(self.point_next_position, self.last_collision_norm)
 
     def _iterate_constrains_connections(self):
         for index in range(self.connection_amount):
@@ -96,7 +97,7 @@ class SoftBody:
 
         self.point_velocity += acc * dt
 
-        self.point_velocity *= 1-self.C
+        self.point_velocity *= 1 - self.C
 
         self.point_next_position = self.point_position + self.point_velocity * dt * self.point_is_free[..., None]
 
@@ -104,3 +105,14 @@ class SoftBody:
 
         self.point_velocity = (self.point_next_position - self.point_position) / dt
         self.point_position = self.point_next_position
+
+        for idx in range(self.point_amount):
+            if np.linalg.norm(self.last_collision_norm[idx, :]) > -0.1:
+                if np.dot(self.point_velocity[idx, :], self.last_collision_norm[idx, :]) < 0:
+                    self.point_velocity[idx, :] -= (self.last_collision_norm[idx, :] *
+                                                    np.dot(self.point_velocity[idx, :],
+                                                           self.last_collision_norm[idx, :]))
+                    self.point_velocity[idx, :] *= (1 - self.C) ** 2
+                    self.point_velocity[idx, :] -= (self.last_collision_norm[idx, :] *
+                                                    np.dot(self.point_velocity[idx, :],
+                                                           self.last_collision_norm[idx, :]))
