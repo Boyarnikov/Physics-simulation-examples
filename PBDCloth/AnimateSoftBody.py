@@ -1,17 +1,22 @@
+import time
+
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Line3D
+from mpl_toolkits.mplot3d.art3d import Line3D, Poly3DCollection
+from mpl_toolkits.mplot3d.axes3d import Axes3D
 from typing import List
 from SoftBody import SoftBody
+import Constrain
 
 
 class AnimateSoftBody:
     time = 0
     fig = None
-    ax = None
+    ax: Axes3D = None
     soft_body = None
     actor_points: Line3D = None
     actor_connections: List[Line3D] = []
+    actor_constrains: List[Poly3DCollection] = None
 
     draw_connections = True
 
@@ -46,6 +51,7 @@ class AnimateSoftBody:
                     print(f"{(frame + 1) // (self.frames // 10) * 10}%")
 
             animator._simulate_soft_body()
+            animator._draw_constrains()
             animator._draw_points()
             if animator.draw_connections:
                 animator._draw_connections()
@@ -56,6 +62,18 @@ class AnimateSoftBody:
 
     def _simulate_soft_body(self):
         self.soft_body.calculate_next_positions(self.dt)
+
+    def _draw_constrains(self):
+        if not self.actor_constrains:
+            self.actor_constrains = [None] * len(self.soft_body.constrains)
+            for i, c in enumerate(self.soft_body.constrains):
+                if isinstance(c, Constrain.PlaneConstrain):
+                    u = c.v_start / 2 + np.linspace(0, 1, 4).reshape((4, 1)) * c.v1.reshape((1, 3))
+                    v = c.v_start / 2 + np.linspace(0, 1, 4).reshape((4, 1)) * c.v2.reshape((1, 3))
+                    points = v[:, None, :] + u[None, :, :]
+                    points.reshape((points.shape[0] * points.shape[1], points.shape[2]))
+                    self.actor_constrains[i] = self.ax.plot_surface(points[:, :, 0], points[:, :, 1], points[:, :, 2], alpha=0.1)
+
 
     def _draw_connections(self):
         _left_connections = np.take(self.soft_body.point_position, (self.soft_body.connection[:, 0] * 3,
