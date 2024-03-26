@@ -6,7 +6,7 @@ import time
 
 from SoftBody import SoftBody
 from AnimateSoftBody import AnimateSoftBody
-from ClothShapes import create_rect_x
+from ClothShapes import create_rect_with_strong_edges
 from BodyShapes import create_cube_rigid
 from Constrain import PlaneConstrain
 
@@ -18,18 +18,28 @@ import matplotlib
 matplotlib.rcParams['animation.embed_limit'] = 20000
 
 DT = 1 / 60
-'''
+
 h, w = 10, 10
-points, connections = create_rect_x(h, w,
+points, connections = create_rect_with_strong_edges(h, w,
                                     starting_point=np.array([0.1, 0.1, 1.0]),
                                     h_vec=np.array([0.8, 0.0, 0.0]),
                                     w_vec=np.array([0.0, 0.8, 0.0]))
 
-sb = SoftBody(_points=points, _connections=connections, iters=3, m=0.1, c=60)
-sb.fix_points([0])
-sb.fix_points([h - 1])
-'''
+i = 5
+c = 0.01
 
+sb = SoftBody(_points=points, _connections=connections, iters=i, m=0.5, c=c, b=2)
+sb.fix_points([0])
+sb.fix_points([1])
+sb.fix_points([h - 1])
+
+
+def pass_func():
+    sb.point_position[0][1] += 0.003
+    sb.point_position[1][1] += 0.003
+
+
+'''
 h, w, d = 2, 2, 2
 points, connections = create_cube_rigid(h, w, d,
                                     starting_point=np.array([0.2, 0.2, 0.2]),
@@ -53,16 +63,15 @@ wall = PlaneConstrain(np.array([0.0, 1.0, 0.0]), np.array([1.0, 0.0, 0.0]), np.a
 sb.add_constrain(wall)
 wall = PlaneConstrain(np.array([1.0, 0.0, 0.0]), np.array([0.0, 0.0, 1.0]), np.array([0.0, 1.0, 0.0]))
 sb.add_constrain(wall)
-
+'''
 frames = 200
-asb = AnimateSoftBody(soft_body=sb, dt=DT, frames=frames)
-
+asb = AnimateSoftBody(soft_body=sb, dt=DT, frames=frames, pass_func=pass_func)
 
 ani = animation.FuncAnimation(
     asb.fig, asb.animation_func, frames, fargs=(asb,),
     interval=10)
 
-writer = animation.PillowWriter(fps=30, bitrate=1800)
-ani.save(f'bin/Cube_with_physics.gif', writer=writer)
+# writer = animation.PillowWriter(fps=30, bitrate=1800)
+# ani.save(f'bin/Cube_with_physics.gif', writer=writer)
 
 plt.show()

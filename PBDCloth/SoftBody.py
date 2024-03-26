@@ -21,6 +21,7 @@ class SoftBody:
     connection_is_active = np.empty(connection_amount, dtype=np.bool_)
 
     iteration_count = 1
+    breaking_coefficient = 3.5
 
     constrains: List[Constrain] = []
 
@@ -29,6 +30,7 @@ class SoftBody:
                  _connections=None,
                  m=1.,
                  c=0.,
+                 b=3.,
                  iters: int = 1):
         self.point_amount = len(_points)
         self.point_position = np.asarray(_points, dtype=np.float64)
@@ -59,8 +61,9 @@ class SoftBody:
 
         self.iteration_count = iters
 
-        self.connection_is_active = np.ones(self.point_amount, dtype=np.bool_)
+        self.connection_is_active = np.ones(len(_connections), dtype=np.bool_)
         self.C = c
+        self.breaking_coefficient = b if b else 3.5
 
     def fix_points(self, fix_points: List[int]):
         for p in fix_points:
@@ -78,10 +81,17 @@ class SoftBody:
 
     def _iterate_constrains_connections(self):
         for index in range(self.connection_amount):
+            if not self.connection_is_active[index]:
+                continue
             i, j = self.connection[index][0], self.connection[index][1]
             direction = self.point_next_position[i] - self.point_next_position[j]
+            if np.linalg.norm(direction) > self.connection_idle_len[index] * self.breaking_coefficient:
+                self.connection_is_active[index] = False
+                continue
             if np.linalg.norm(direction):
                 offset = direction * (1 - self.connection_idle_len[index] / np.linalg.norm(direction))
+                if not self.point_is_free[i] or not self.point_is_free[j]:
+                    offset *= 2
                 if self.point_is_free[i]:
                     self.point_next_position[i] -= offset / 2
                 if self.point_is_free[j]:
