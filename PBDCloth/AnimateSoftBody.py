@@ -74,8 +74,8 @@ class AnimateSoftBody:
                     v = c.v_start / 2 + np.linspace(0, 1, 4).reshape((4, 1)) * c.v2.reshape((1, 3))
                     points = v[:, None, :] + u[None, :, :]
                     points.reshape((points.shape[0] * points.shape[1], points.shape[2]))
-                    self.actor_constrains[i] = self.ax.plot_surface(points[:, :, 0], points[:, :, 1], points[:, :, 2], alpha=0.1)
-
+                    self.actor_constrains[i] = self.ax.plot_surface(points[:, :, 0], points[:, :, 1], points[:, :, 2],
+                                                                    alpha=0.1)
 
     def _draw_connections(self):
         _left_connections = np.take(self.soft_body.point_position, (self.soft_body.connection[:, 0] * 3,
@@ -97,8 +97,13 @@ class AnimateSoftBody:
                     actor.set_data([0], [0])
                     actor.set_3d_properties(0)
                     continue
+
                 p1 = self.soft_body.point_position[self.soft_body.connection[i, 0]]
                 p2 = self.soft_body.point_position[self.soft_body.connection[i, 1]]
+                if np.linalg.norm(p1 - p2) > self.soft_body.connection_idle_len[i] * 1.1:
+                    actor.set(color="r")
+                else:
+                    actor.set(color="b")
 
                 actor.set_data(np.column_stack((p1, p2))[:2])
                 actor.set_3d_properties(np.column_stack((p1, p2))[2], "z")
