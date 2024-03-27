@@ -26,3 +26,9 @@
 Вывод метода Верле из Полу-Эйлера. Симуляция ткани и мягких тел с использованием пружин и материальных точек.
 
 <img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/VerletSpingCloth/bin/Falling_clothes.gif' width='400'><img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/VerletSpingCloth/bin/Clothes_in_cilinder_with_a_push.gif' width='400'><img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/VerletSpingCloth/bin/Clothes_with_wind.gif' width='400'> <img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/VerletSpingCloth/bin/Clothes_in_cilinder_with_wind.gif' width='400'>
+
+# PBDCloth
+
+Симуляция физчических точек через итерирования ограничений. Ограничениями могут задоваться расстояния между точками или колизии.
+
+<img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/PBDCloth/bin/Cube_skewed_1iters_600frames_0.1dump.gif' width='400'><img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/PBDCloth/bin/Cube_with_physics.gif' width='400'><img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/PBDCloth/bin/Cloth_with_physics_in_a_box.gif' width='400'> <img src='https://github.com/Boyarnikov/physics_simulation_examples/blob/main/PBDCloth/bin/Cloth_with_physics_tearing.gif' width='400'>
